@@ -16,9 +16,9 @@ class PythonMFCC:
         elif filterBand >= 1 and filterBand <= 14:
             centerFrequency = (200.0 * float(filterBand)) / 3.0
         else:
-            exponent = filterBand - 14.0
+            exponent = float(filterBand) - 14.0
             centerFrequency = pow(1.0711703, exponent)
-            centerFrequency *= 1073.4
+            centerFrequency = centerFrequency * 1073.4
         return centerFrequency
     
     def getMagnitudeFactor(self, filterBand: int):
@@ -30,7 +30,8 @@ class PythonMFCC:
         if filterBand >= 1 and filterBand <= 14:
             magnitudeFactor = 0.015
         elif filterBand >= 15 and filterBand <= 48:
-            magnitudeFactor = 2.0 / ( self.getCenterFrequency(filterBand + 1) - self.getCenterFrequency(filterBand - 1))
+            magnitudeFactor = 2.0 / ( self.getCenterFrequency(filterBand + 1) - \
+                                     - self.getCenterFrequency(filterBand - 1))
         return magnitudeFactor
     
     def getFilterParameter(self, samplingRate: int, binSize: int, frequencyBand: int, filterBand: int):
@@ -39,7 +40,7 @@ class PythonMFCC:
         Used for internal computation only - not the be called directly
         """
         filterParameter: float = 0.0
-        boundary: float = (frequencyBand * samplingRate) / binSize
+        boundary: float = (float(frequencyBand) * float(samplingRate)) / float(binSize)
         prevCenterFrequency: float = self.getCenterFrequency(filterBand + 1)
         thisCenterFrequency: float = self.getCenterFrequency(filterBand)
         nextCenterFrequency: float = self.getCenterFrequency(filterBand + 1)
@@ -65,9 +66,9 @@ class PythonMFCC:
         normalizationFactor: float = 0.0
 
         if m == 0:
-            normalizationFactor = math.sqrt(1.0 / numFilters)
+            normalizationFactor = math.sqrt(1.0 / float(numFilters))
         else:
-            normalizationFactor = math.sqrt(2.0 / numFilters)
+            normalizationFactor = math.sqrt(2.0 / float(numFilters))
         
         return normalizationFactor
     
@@ -99,7 +100,7 @@ class PythonMFCC:
                 innerSum = innerSum + math.fabs(spectralData[k] * self.getFilterParameter(samplingRate, binSize, k, l))
             if innerSum > 0:
                 innerSum = math.log(innerSum)
-            innerSum = innerSum * math.cos(((m * math.pi) / numFilters) * (l - 0.5))
+            innerSum = innerSum * math.cos(((float(m) * math.pi) / float(numFilters)) * (float(l) - 0.5))
             outerSum = outerSum + innerSum
         result = result * outerSum
         return result
