@@ -98,7 +98,7 @@ class PythonMFCC:
             innerSum = 0.0
             for k in range(0, binSize - 1):
                 innerSum = innerSum + math.fabs(spectralData[k] * self.getFilterParameter(samplingRate, binSize, k, l))
-            if innerSum > 0:
+            if innerSum > 0.0:
                 innerSum = math.log(innerSum)
             innerSum = innerSum * math.cos(((float(m) * math.pi) / float(numFilters)) * (float(l) - 0.5))
             outerSum = outerSum + innerSum
